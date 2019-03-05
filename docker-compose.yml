@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  redis:
+    image: bitnami/redis
+    hostname: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=123456
+
+  postgres:
+    image: postgres:11.2-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./migrations/V1__initial.sql:/docker-entrypoint-initdb.d/init.sql
+
+  demo_messenger:
+     build: .
+     ports:
+       - "8085:8085"
+     restart: always
+     environment:
+       - LISTEN_PORT=8085
+       - BASE_FILE_PATH=/
+       - LOG_FORMAT=json
+       - MESSAGE_BIRD_KEY=IxkySAbbMONtsG8ra0x0KtAxb
+       - BUFFER_DB_CONNECTION_STRING=postgres://postgres@postgres:5432/postgres?sslmode=disable
+       - REDIS_HOST=redis:6379
+       - REDIS_PWD=123456
+     links:
+       - postgres
+       - redis
+     depends_on:
+       - postgres
+       - redis
+
