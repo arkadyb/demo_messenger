@@ -23,7 +23,11 @@ When containers are ready (give it at least 5 seconds to start pg and redis), yo
 
 ## How to use
 
-Service exposes only one `POST` endpoint - `/v1/send/sms`. 
+Service exposes multiple endpoints:
+- GET `/health` - health endpoint
+- GET `/metrics` - Prometheus metrics endpoint
+- POST `/v1/send/sms` - sms delivery via Message Bird endpoint
+ 
 POST message body format (JSON):
 ```json
 {
