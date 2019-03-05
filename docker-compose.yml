@@ -30,7 +30,7 @@ services:
        - LISTEN_PORT=8085
        - BASE_FILE_PATH=/
        - LOG_FORMAT=json
-       - MESSAGE_BIRD_KEY=IxkySAbbMONtsG8ra0x0KtAxb
+       - MESSAGE_BIRD_KEY=
        - BUFFER_DB_CONNECTION_STRING=postgres://postgres@postgres:5432/postgres?sslmode=disable
        - REDIS_HOST=redis:6379
        - REDIS_PWD=123456
