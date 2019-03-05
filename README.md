@@ -8,7 +8,17 @@ Service implements rate limiting and circuit breaker patterns. Uses Postgres as 
 How to run
 ------------
 Service depends on persistant storage (Postgres), cache (Redis) and Message Bird client (used for sms delivery). There are two options to run it - run both (Redis and Postgres) on your local machine and run service with `make run` command or use Docker Compose.
-In case of `make run`, please care to update `.env` file with the host names and passwords. Also, dont forget to get your Message Bird access key and put it into respective env variable in `.env` file.
+In case of `make run`, please care to update/create `.env` file with the host names and passwords. Also, dont forget to get your Message Bird access key and put it into respective env variable in `.env` file.
+```.env
+LISTEN_PORT=8085
+
+BUFFER_DB_CONNECTION_STRING=postgres://postgres@localhost:5432/postgres?sslmode=disable
+
+REDIS_HOST=localhost:6379
+REDIS_PWD=123456
+
+MESSAGE_BIRD_KEY=[Your-MessageBird-Key]
+```
 To run service with `docker-compose`, update `docker-compose.yml` file with Message Bird access key you got and run `docker-compose up -d` command. It should run 3 containers - postgres, redis and demo_messenger.
 When containers are ready (give it at least 5 seconds to start pg and redis), you should be able to call service's health endpoint at `http://localhost:8085/health` and get `true` in response confirming service is up and running. 
 
