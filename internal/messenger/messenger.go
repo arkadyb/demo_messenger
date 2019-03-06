@@ -2,6 +2,7 @@ package messenger
 
 import (
 	"context"
+	"database/sql"
 	"github.com/arkadyb/demo_messenger/internal/pkg/buffer"
 	"github.com/arkadyb/demo_messenger/internal/types"
 	"github.com/pkg/errors"
@@ -42,25 +43,37 @@ func NewMessenger(sendNotification SendNotificationFunc, buf buffer.Buffer) *Mes
 				a.timer.Stop()
 
 				nextMessage, err := a.buffer.PopNextMessage(ctx)
+				if err == sql.ErrNoRows {
+					// no rows were found, skip
+					a.timer.Reset(BATCH_TIMEOUT)
+					break
+				}
 				if err != nil {
 					if a.Errors != nil {
 						a.Errors <- errors.Wrap(err, "failed to pop next message")
 					}
+					a.timer.Reset(BATCH_TIMEOUT)
 					break
 				}
 
 				if nextMessage != nil {
-					recipients, _ := a.buffer.GetRecipientsForMessageID(ctx, nextMessage.MessageID)
+					recipients, err := a.buffer.GetRecipientsForMessageID(ctx, nextMessage.MessageID)
+					if err != nil {
+						a.Errors <- errors.Wrapf(err, "failed to get recipients for message %d", nextMessage.MessageID)
+						a.timer.Reset(BATCH_TIMEOUT)
+						break
+					}
 					if len(recipients) > 0 {
 						if err := sendNotification(nextMessage, recipients); err != nil {
 							if a.Errors != nil {
 								a.Errors <- errors.Wrap(err, "failed to send notification")
+								a.timer.Reset(BATCH_TIMEOUT)
 								break
 							}
 						}
 					}
 				}
-				a.timer.Reset(BATCH_TIMEOUT)
+
 			}
 		}
 	}()
@@ -85,7 +98,7 @@ func (a *Messenger) EnqueueSMS(ctx context.Context, sms *types.SMS) error {
 		return errors.New("sms cant be nil")
 	}
 
-	if err := a.buffer.SaveMessageForRecipient(ctx, sms.Recipient, sms.Originator, sms.Message); err != nil {
+	if err := a.buffer.SaveMessageForRecipient(ctx, sms.Recipient, sms.Originator, sms.Message); err != nil && err != sql.ErrNoRows {
 		return errors.Wrap(err, "failed to send sms")
 	}
 

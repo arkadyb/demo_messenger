@@ -48,7 +48,7 @@ func (pb *PostgresBuffer) PopNextMessage(ctx context.Context) (*Message, error) 
 	err = tx.GetContext(ctx, message, "SELECT message_id, originator, text  FROM messages WHERE message_id = (SELECT MIN(message_id) FROM messages WHERE processed=FALSE) FOR UPDATE")
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, nil
+			return nil, err
 		}
 
 		return nil, errors.Wrap(err, "failed to get maximum sequence number from projection")
@@ -80,7 +80,7 @@ func (pb *PostgresBuffer) SaveMessageForRecipient(ctx context.Context, phoneNumb
 	defer tx.Rollback()
 
 	var unprocessedMesages []*Message
-	if err = tx.SelectContext(ctx, &unprocessedMesages, "SELECT message_id, originator, text, processed FROM messages WHERE originator=$1 AND text=$2 AND processed = FALSE FOR UPDATE", originator, text); err != nil && err != sql.ErrNoRows {
+	if err = tx.SelectContext(ctx, &unprocessedMesages, "SELECT message_id, originator, text, processed FROM messages WHERE originator=$1 AND text=$2 AND processed = FALSE FOR UPDATE", originator, text); err != nil {
 		return errors.Wrap(err, "failed to select unprocessed messages")
 	}
 
@@ -119,7 +119,7 @@ func (pb *PostgresBuffer) GetRecipientsForMessageID(ctx context.Context, message
 	var recipients []*Recipient
 
 	err := pb.SelectContext(ctx, &recipients, "SELECT message_id, phone_number FROM recipients WHERE message_id = $1", messageID)
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil {
 		return nil, errors.Wrap(err, "failed to get maximum sequence number from projection")
 	}
 

@@ -88,7 +88,7 @@ func TestPostgresBuffer_PopNextMessage(t *testing.T) {
 				context.Background(),
 			},
 			nil,
-			false,
+			true,
 		},
 	}
 	for _, tt := range tests {
@@ -284,7 +284,7 @@ func TestPostgresBuffer_GetRecipientsForMessageID(t *testing.T) {
 				1,
 			},
 			nil,
-			false,
+			true,
 		},
 		{
 			"DB Error",
