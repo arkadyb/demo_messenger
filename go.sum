@@ -6,8 +6,8 @@ github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc h1:cAKDfWh5Vpd
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf h1:qet1QNfXsQxTZqLG4oE62mJzwPIB8+Tee4RNCL9ulrY=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
-github.com/arkadyb/rate_limiter v0.0.0-20190305071855-7be6acdfd01d h1:jhwbX564ffiK4FChhd9ojtnNkGZXrRPRF8/ozIEK36Q=
-github.com/arkadyb/rate_limiter v0.0.0-20190305071855-7be6acdfd01d/go.mod h1:Ch8RPNS3SUtuaPyxTjtbarDHzhvBUshIghhG8yeOvG8=
+github.com/arkadyb/rate_limiter v1.0.0 h1:+CfHiI9+vNSRWlXV+dTCGHZ+2lqDBrSXJQGkVWgY8Zk=
+github.com/arkadyb/rate_limiter v1.0.0/go.mod h1:Ch8RPNS3SUtuaPyxTjtbarDHzhvBUshIghhG8yeOvG8=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973 h1:xJ4a3vCFaGF/jqvzLMYoU8P317H5OQ+Via4RmuPwCS0=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
