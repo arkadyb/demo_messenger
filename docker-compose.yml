@@ -30,7 +30,10 @@ services:
        - LISTEN_PORT=8085
        - BASE_FILE_PATH=/
        - LOG_FORMAT=json
-       - MESSAGE_BIRD_KEY=
+#       Replace with your Twilio SID
+       - TWILIO_SID = 123
+#       Replace with your Twilio token
+       - TWILIO_TOKEN = 123
        - BUFFER_DB_CONNECTION_STRING=postgres://postgres@postgres:5432/postgres?sslmode=disable
        - REDIS_HOST=redis:6379
        - REDIS_PWD=123456

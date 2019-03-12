@@ -73,7 +73,7 @@ func NewMessenger(sendNotification SendNotificationFunc, buf buffer.Buffer) *Mes
 						}
 					}
 				}
-
+				a.timer.Reset(BATCH_TIMEOUT)
 			}
 		}
 	}()

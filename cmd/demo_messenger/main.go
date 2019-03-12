@@ -6,8 +6,8 @@ import (
 	"github.com/arkadyb/demo_messenger/internal/server"
 	"github.com/arkadyb/rate_limiter"
 	"github.com/gomodule/redigo/redis"
-	"github.com/messagebird/go-rest-api"
 	"github.com/pkg/errors"
+	"net/http"
 	"os"
 	"os/signal"
 	"strings"
@@ -50,8 +50,11 @@ func main() {
 		log.Fatalln("failed to dial postgres:", err)
 	}
 
+	// create twilio http client
+	httpclient := &http.Client{}
+
 	// init application
-	messenger := messenger.NewMessenger(messenger.SendSMSViaMessageBird(messagebird.New(cfg.MessageBirdKey)), buffer)
+	messenger := messenger.NewMessenger(messenger.SendSMSViaTwilio(cfg.TwilioSid, cfg.TwilioToken, httpclient), buffer)
 	messenger.Errors = make(chan error)
 	go func() {
 		for err := range messenger.Errors {
