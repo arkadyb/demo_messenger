@@ -16,7 +16,8 @@ BUFFER_DB_CONNECTION_STRING=postgres://postgres@localhost:5432/postgres?sslmode=
 REDIS_HOST=localhost:6379
 REDIS_PWD=123456
 
-MESSAGE_BIRD_KEY=[Your-MessageBird-Key]
+TWILIO_SID=[Your-Twilio-Sid]
+TWILIO_TOKEN=[Your-Twilio-Token]
 ```
 To run service with `docker-compose`, update `docker-compose.yml` file with Message Bird access key you got and run `docker-compose up -d` command. It should run 3 containers - postgres, redis and demo_messenger.
 When containers are ready (give it at least 5 seconds to start pg and redis), you should be able to call service's health endpoint at `http://localhost:8085/health` and get `true` in response confirming service is up and running. 
