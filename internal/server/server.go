@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	hrx "github.com/afex/hystrix-go/hystrix"
+	"github.com/arkadyb/caply"
 	"github.com/arkadyb/demo_messenger/internal/messenger"
-	"github.com/arkadyb/rate_limiter"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
@@ -18,7 +18,7 @@ import (
 )
 
 // NewServer returns new server instance
-func NewServer(cfg Configuration, messenger messenger.Application, rateLimiter ratelimiter.RateLimiter) *Server {
+func NewServer(cfg Configuration, messenger messenger.Application, caply *caply.Caply) *Server {
 	var (
 		addr             = fmt.Sprintf(":%s", strconv.Itoa(cfg.Port))
 		hrxDefaultConfig = hrx.CommandConfig{
@@ -29,7 +29,7 @@ func NewServer(cfg Configuration, messenger messenger.Application, rateLimiter r
 	)
 
 	router := mux.NewRouter()
-	router.Use(LoggingMiddleware, RateLimitingMiddleware(rateLimiter), PrometheusMiddleware, handlers.RecoveryHandler(handlers.PrintRecoveryStack(true)))
+	router.Use(LoggingMiddleware, RateLimitingMiddleware(caply), PrometheusMiddleware, handlers.RecoveryHandler(handlers.PrintRecoveryStack(true)))
 
 	router.NotFoundHandler = http.HandlerFunc(notFound404Handler)
 	router.Handle("/health", http.HandlerFunc(healthHandler)).Methods("GET")

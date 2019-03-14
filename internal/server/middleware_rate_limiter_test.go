@@ -15,7 +15,7 @@ type MockedRateLimiter struct {
 	mock.Mock
 }
 
-func (m *MockedRateLimiter) LimitExceeded(commandName string) (res bool, err error) {
+func (m *MockedRateLimiter) Exceeded(commandName string) (res bool, err error) {
 	args := m.Called(commandName)
 	if args.Get(0) != nil {
 		res = args.Get(0).(bool)
@@ -43,7 +43,7 @@ func Test_rateLimitingMiddleware(t *testing.T) {
 			args{
 				func() *MockedRateLimiter {
 					rl := &MockedRateLimiter{}
-					rl.On("LimitExceeded", mock.Anything).Return(false, nil)
+					rl.On("Exceeded", mock.Anything).Return(false, nil)
 					return rl
 				},
 			},
@@ -57,7 +57,7 @@ func Test_rateLimitingMiddleware(t *testing.T) {
 			args{
 				func() *MockedRateLimiter {
 					rl := &MockedRateLimiter{}
-					rl.On("LimitExceeded", mock.Anything).Return(true, nil)
+					rl.On("Exceeded", mock.Anything).Return(true, nil)
 					return rl
 				},
 			},
@@ -69,7 +69,7 @@ func Test_rateLimitingMiddleware(t *testing.T) {
 			args{
 				func() *MockedRateLimiter {
 					rl := &MockedRateLimiter{}
-					rl.On("LimitExceeded", mock.Anything).Return(false, errors.New("error"))
+					rl.On("Exceeded", mock.Anything).Return(false, errors.New("error"))
 					return rl
 				},
 			},

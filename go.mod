@@ -3,7 +3,7 @@ module github.com/arkadyb/demo_messenger
 require (
 	github.com/DATA-DOG/go-sqlmock v1.3.2
 	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5
-	github.com/arkadyb/rate_limiter v1.0.0
+	github.com/arkadyb/caply v1.0.0
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/gorilla/handlers v1.4.0
 	github.com/gorilla/mux v1.7.0

@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/arkadyb/caply"
 	"github.com/arkadyb/demo_messenger/internal/messenger"
 	"github.com/arkadyb/demo_messenger/internal/pkg/buffer"
 	"github.com/arkadyb/demo_messenger/internal/server"
-	"github.com/arkadyb/rate_limiter"
 	"github.com/gomodule/redigo/redis"
 	"github.com/pkg/errors"
 	"net/http"
@@ -25,9 +25,9 @@ var (
 
 func main() {
 	var (
-		cfg         = server.InitConfig()
-		rateLimiter ratelimiter.RateLimiter
-		err         error
+		cfg = server.InitConfig()
+		cp  *caply.Caply
+		err error
 	)
 
 	// Setup log format
@@ -63,7 +63,7 @@ func main() {
 	}()
 
 	// init redis db and rate-limiter
-	rateLimiterStore := ratelimiter.NewRedisStore(&redis.Pool{
+	rateLimiterStore := caply.NewRedisStore(&redis.Pool{
 		MaxIdle:     cfg.RedisMaxIdle,
 		MaxActive:   cfg.RedisMaxActive,
 		IdleTimeout: time.Duration(cfg.RedisIdleTimeoutSeconds) * time.Second,
@@ -75,12 +75,12 @@ func main() {
 			return c, err
 		},
 	})
-	rateLimiter, err = ratelimiter.NewFixedTimeWindowRateLimiter(cfg.RateLimitMaxRequests, time.Duration(cfg.RateLimitPerPeriodSeconds)*time.Second, rateLimiterStore)
+	cp, err = caply.NewCaply(cfg.RateLimitMaxRequests, time.Duration(cfg.RateLimitPerPeriodSeconds)*time.Second, rateLimiterStore)
 	if err != nil {
 		log.Fatalln(errors.Wrap(err, "failed to setup rate limiter"))
 	}
 
-	server := server.NewServer(cfg, messenger, rateLimiter)
+	server := server.NewServer(cfg, messenger, cp)
 	// start server
 	server.Start()
 

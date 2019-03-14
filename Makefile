@@ -8,7 +8,7 @@ endif
 
 .PHONY: test
 test: ## Runs the tests and higlights race conditions
-	GO111MODULE=on go test -race $$(go list ./...)
+	GO111MODULE=on go test --count=1 -race $$(go list ./...)
 
 SERVICE ?= demo_messenger
 NOW=$(shell date -u '+%Y-%m-%d_%I:%M:%S%p')
